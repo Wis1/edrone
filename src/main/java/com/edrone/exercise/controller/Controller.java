@@ -1,18 +1,17 @@
 package com.edrone.exercise.controller;
 
+import com.edrone.exercise.domain.Job;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("v1/strings")
 @RequiredArgsConstructor
 public class Controller {
 
-    @PostMapping
-    public void createNewJob(){
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void createNewJob(@RequestBody Job job){
 
     }
 
