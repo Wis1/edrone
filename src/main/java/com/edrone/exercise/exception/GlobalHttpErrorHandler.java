@@ -11,7 +11,7 @@ public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(JobNotFoundException.class)
     public ResponseEntity<Object> handleJobProductNotFoundException(JobNotFoundException exception){
-        return new ResponseEntity<>("Job with given id doesn,t exist", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Job with given id doesn't exist", HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(TooMuchStringsException.class)

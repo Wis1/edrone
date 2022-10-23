@@ -19,25 +19,19 @@ import java.io.FileNotFoundException;
 public class Controller {
 
     private final JobService jobService;
-    private final JobMapper jobMapper;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> createNewJob(@RequestBody JobDto jobDto) throws FileNotFoundException, TooMuchStringsException {
-
         jobService.createNewJob(jobDto);
         return ResponseEntity.ok().build();
-
     }
-
     @GetMapping
     public int getHowManyJobsRunning(){
         return 0;
     }
 
-
     @GetMapping(value = "/{id}")
     public ResponseEntity<String> getResultJob(@PathVariable Long id) throws FileNotFoundException, JobNotFoundException {
-        JobDto jobDto= jobMapper.mapToJobDto(jobService.getJobById(id));
         return ResponseEntity.ok(jobService.getResultJob(id));
     }
 }
