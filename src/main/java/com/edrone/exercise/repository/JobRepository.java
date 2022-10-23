@@ -13,4 +13,5 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     @Override
     Optional<Job> findById(Long id);
+    Job save(Job job);
 }

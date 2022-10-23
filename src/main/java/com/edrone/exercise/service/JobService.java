@@ -4,6 +4,7 @@ import com.edrone.exercise.domain.Job;
 import com.edrone.exercise.dto.JobDto;
 import com.edrone.exercise.exception.JobNotFoundException;
 import com.edrone.exercise.exception.TooMuchStringsException;
+import com.edrone.exercise.mapper.JobMapper;
 import com.edrone.exercise.repository.JobRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,33 +19,51 @@ import java.util.Scanner;
 public class JobService {
 
     private final JobRepository jobRepository;
+    private final JobMapper jobMapper;
 
     private PrintWriter outputFile;
+
+    private String combination="";
 
 
     public void createNewJob(JobDto jobDto) throws FileNotFoundException, TooMuchStringsException {
         if (checkJob(jobDto.getCharacterArray())<jobDto.getAmountStrings())
             throw new TooMuchStringsException();
-        else
-            findComb(jobDto.getCharacterArray());
+        else {
+            jobRepository.save(jobMapper.mapToJob(jobDto));
+//            findComb(jobDto.getCharacterArray());
+            findCombinations(jobDto.getCharacterArray(), jobDto.getLengthMin(), jobDto.getLengthMax());
+        }
 
     }
-//    private void findCombinations(char[] array, StringBuilder candidate, int lengthMin, int lengthMax) {
-//        if (candidate.length() == lengthMax)
-//            return;
-//
-//        for (int i = 0; i < array.length; i++) {
-//            candidate.append(array[i]);
+    private void findCombinations(char[] array, StringBuilder candidate, int lengthMin, int lengthMax) throws FileNotFoundException {
+
+        if (candidate.length() == lengthMax){
+            outputFile.println(combination);
+            outputFile.close();
+            return;
+        }
+        else {
+            outputFile = new PrintWriter("Strings");
+
+
+            for (int i = 0; i < array.length; i++) {
+                candidate.append(array[i]);
 //          if (candidate.length()<lengthMin)
-////                candidate.append(array[i]);
-//            System.out.println(candidate);
-//            findCombinations(array,candidate,lengthMin, lengthMax);
-//            candidate.deleteCharAt(candidate.length()-1);
-//        }
-//    }
-//    public void findCombinations(char[] array,int lengthMin, int lengthMax) {
-//        findCombinations(array, new StringBuilder(), lengthMin, lengthMax);
-//    }
+//                candidate.append(array[i]);
+                System.out.println(candidate);
+                combination = combination + candidate+"\n";
+
+                findCombinations(array, candidate, lengthMin, lengthMax);
+
+                candidate.deleteCharAt(candidate.length() - 1);
+            }
+        }
+
+    }
+    public void findCombinations(char[] array,int lengthMin, int lengthMax) throws FileNotFoundException {
+        findCombinations(array, new StringBuilder(), lengthMin, lengthMax);
+    }
 
     public int checkJob(char[] letters){
         int max_length = 3;
@@ -54,10 +73,11 @@ public class JobService {
             n = (n*b)+b;
         return n;
     }
+
     public void findComb(char[] letters) throws FileNotFoundException {
         int remainder;
         int b = letters.length - 1;
-
+        outputFile= new PrintWriter("Strings");
         for (int i = 1; i <= checkJob(letters); i++) {
             int current = i;
             String combination = "";
@@ -71,26 +91,33 @@ public class JobService {
                     current = current/b;
                 }
             } while (current > 0);
-            outputFile= new PrintWriter("Strings");
+
             outputFile.println(combination);
             System.out.println(combination);
         }
         outputFile.close();
     }
 
+    public Job getJobById(Long id) throws JobNotFoundException{
+
+        return jobRepository.findById(id).orElseThrow(JobNotFoundException::new);
+
+    }
+
     public String getResultJob(Long id) throws FileNotFoundException, JobNotFoundException {
         Job job=jobRepository.findById(id).orElseThrow(JobNotFoundException::new);
         File myFile= new File("Strings");
-        Scanner in= new Scanner(myFile); 
-        String all = "";
+        Scanner in= new Scanner(myFile);
+        StringBuilder all = new StringBuilder();
         int counter=0;
         while(in.hasNext()&&counter<=job.getAmountStrings()) {
             String line= in.nextLine();
-            all= all+line+"\n";
+            all.append(line).append("\n");
             counter +=1;
         }
+        in.close();
 
-        return all;
+        return all.toString();
 
     }
 }
