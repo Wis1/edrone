@@ -1,6 +1,8 @@
 package com.edrone.exercise.controller;
 
-import com.edrone.exercise.domain.Job;
+import com.edrone.exercise.dto.JobDto;
+import com.edrone.exercise.exception.JobNotFoundException;
+import com.edrone.exercise.exception.TooMuchStringsException;
 import com.edrone.exercise.service.JobService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -9,16 +11,16 @@ import org.springframework.web.bind.annotation.*;
 import java.io.FileNotFoundException;
 
 @RestController
-@RequestMapping("v1/strings")
+@RequestMapping("/v1/strings")
 @RequiredArgsConstructor
 public class Controller {
 
-    private JobService jobService;
+    private final JobService jobService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void createNewJob(@RequestBody Job job) throws FileNotFoundException {
+    public void createNewJob(@RequestBody JobDto jobDto) throws FileNotFoundException, TooMuchStringsException {
 
-        jobService.createNewJob(job);
+        jobService.createNewJob(jobDto);
 
     }
 
@@ -28,9 +30,9 @@ public class Controller {
     }
 
 
-    @GetMapping
-    public String getResultJob(){
+    @GetMapping(value = "{id}")
+    public String getResultJob(@PathVariable Long id) throws FileNotFoundException, JobNotFoundException {
 
-        return null;
+        return jobService.getResultJob(id);
     }
 }

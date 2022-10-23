@@ -1,31 +1,17 @@
-package com.edrone.exercise.domain;
+package com.edrone.exercise.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
-@Entity
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Job {
+public class JobDto {
 
-    @Id
     private Long id;
-
-    @Column
     private int lengthMin;
-
-    @Column
     private int lengthMax;
-
-    @Column
     private char[] characterArray;
-
-    @Column
     private int amountStrings;
 }
