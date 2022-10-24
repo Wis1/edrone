@@ -25,4 +25,4 @@ This get endpoint returns a String with unique strings that were created from th
 
 http://localhost:8080/v1/strings GET
 
-This get endpoint returns the number of jobs in running
+This get endpoint returns the number of jobs in running- NO IMPLEMENTATION :(

@@ -4,7 +4,6 @@ import com.edrone.exercise.domain.Job;
 import com.edrone.exercise.dto.JobDto;
 import com.edrone.exercise.exception.JobNotFoundException;
 import com.edrone.exercise.exception.TooMuchStringsException;
-import com.edrone.exercise.mapper.JobMapper;
 import com.edrone.exercise.service.JobService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;

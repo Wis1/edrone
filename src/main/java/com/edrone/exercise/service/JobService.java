@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +25,7 @@ public class JobService {
 
     private PrintWriter outputFile;
     private String combination="";
+    private Set<String> stringsSet= new HashSet<>();
 
 
     public void createNewJob(JobDto jobDto) throws FileNotFoundException, TooMuchStringsException {
@@ -33,27 +36,30 @@ public class JobService {
             findCombinations(jobDto.getCharacterArray(), jobDto.getLengthMin(), jobDto.getLengthMax());
         }
     }
+    
     private void findCombinations(char[] array, StringBuilder candidate, int lengthMin, int lengthMax) throws FileNotFoundException {
 
         if (candidate.length() == lengthMax){
             outputFile.println(combination);
             outputFile.close();
             return;
-        }
-        else {
+        } else {
             outputFile = new PrintWriter("Strings");
 
             for (int i = 0; i < array.length; i++) {
                 candidate.append(array[i]);
-                combination = combination + candidate+"\n";
+                if (candidate.length()>=lengthMin)
+                    combination = combination + candidate+"\n";
                 findCombinations(array, candidate, lengthMin, lengthMax);
                 candidate.deleteCharAt(candidate.length() - 1);
             }
         }
     }
+
     public void findCombinations(char[] array,int lengthMin, int lengthMax) throws FileNotFoundException {
         findCombinations(array, new StringBuilder(), lengthMin, lengthMax);
     }
+
 
     public int checkPossibleNumberOfCombinations(char[] letters, int maxLength){
         int b = letters.length - 1;
@@ -61,12 +67,6 @@ public class JobService {
         for (int k = 0; k <= maxLength; k++)
             n = (n*b)+b;
         return n;
-    }
-
-    public Job getJobById(Long id) throws JobNotFoundException{
-
-        return jobRepository.findById(id).orElseThrow(JobNotFoundException::new);
-
     }
 
     public String getResultJob(Long id) throws FileNotFoundException, JobNotFoundException {
